@@ -3,7 +3,6 @@
 # System imports:
 import logging
 import os.path
-import re
 import smtplib
 import ssl
 
@@ -12,11 +11,9 @@ from email.parser import Parser
 from email.policy import default
 
 # WeeWX imports:
-import weeutil.config
 import weewx.defaults
 import weewx.manager
 import weewx.units
-from weeutil.weeutil import to_bool, to_int
 from weewx.reportengine import ReportGenerator
 
 
@@ -48,7 +45,7 @@ class MailReporter(ReportGenerator):
                     continue
                 r.append(l)
             return '\n'.join(r)
-                    
+
         try:
             report_root = os.path.join(self.config_dict['WEEWX_ROOT'],
                                        self.skin_dict.get('HTML_ROOT'))
@@ -59,7 +56,7 @@ class MailReporter(ReportGenerator):
             smpt_host, smtp_port = self.skin_dict.get('smtp_host').split(':')
             sender = self.skin_dict.get('sender')
             recipients = self.skin_dict.get('recipients')
-            
+
         except KeyError as ke:
             log.error(f'missing key: {ke}')
             return
@@ -67,7 +64,7 @@ class MailReporter(ReportGenerator):
         if not os.path.exists(mail_path):
             log.error(f'mail reporter "{mail_path}" not found.')
             return
-            
+
         with open(mail_path, 'rt', encoding='utf8') as mail_file:
             mail_text = mail_file.read()
 
@@ -77,7 +74,7 @@ class MailReporter(ReportGenerator):
         msg = EmailMessage()
         for k in headers.keys():
             msg[k] = headers[k]
-            
+
         if 'From' not in msg:
             msg['From'] = sender
         if 'To' not in msg:
