@@ -1,0 +1,27 @@
+Subject: Weather report for $station.location as of $current.dateTime.format("%Y-%m-%d %H:%M %Z")
+
+
+#if str($current.outTemp) == str($current.windchill)
+$current.outTemp, $current.outHumidity humidity
+#else 
+$current.outTemp (feels like $current.windchill), $current.outHumidity humidity
+#end if
+wind $current.windSpeed ($current.windSpeed.beaufort Bft) from $current.windDir.ordinal_compass
+wind gusts $current.windGust ($current.windGust.beaufort Bft) from $current.windGustDir.ordinal_compass
+
+barometer: $current.barometer, ∆ $trend.barometer
+rain rate: $current.rainRate, today $day.rain.sum
+
+min..max:
+- temperature: $day.outTemp.min .. $day.outTemp.max
+- humidity: $day.outHumidity.min .. $day.outHumidity.max
+- barometer: $day.barometer.min .. $day.barometer.max
+
+#if $almanac.hasExtras
+sunrise: $almanac.sun.rise.string()
+sunset: $almanac.sun.set.string()
+
+moon is at $almanac.moon_fullness% — $almanac.moon_phase
+moonrise: $almanac.moon.rise
+moonset: $almanac.moon.set
+#end if
